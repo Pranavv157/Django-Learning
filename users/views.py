@@ -1,56 +1,52 @@
-from django.http import JsonResponse
-from fastapi.responses import JSONResponse
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from .models import UserProfile
-from django.views.decorators.csrf import csrf_exempt
-
-import json
-
-def get_users(request):
-    users = list(UserProfile.objects.values())
-    return JsonResponse(users, safe=False)
+from .serializers import UserSerializer
 
 
-@csrf_exempt
-def create_user(request):
+class UserList(APIView):
 
-    if request.method == "POST":
-        data = json.loads(request.body)
-
-        user = UserProfile.objects.create(
-            name=data["name"],
-            email=data["email"]
-        )
-
-        return JsonResponse({"message": "User created", "id": user.id})
+    def get(self, request):
+        users = UserProfile.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
 
 
-# GET single user
-def get_user(request, user_id):
-    user = UserProfile.objects.get(id=user_id)
-    return JsonResponse({
-        "id": user.id,
-        "name": user.name,
-        "email": user.email
-    })
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+class UserDetail(APIView):
+
+    def get_object(self, pk):
+        return UserProfile.objects.get(pk=pk)
 
 
+    def get(self, request, pk):
+        user = self.get_object(pk)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
 
 
-@csrf_exempt# DELETE user
-def delete_user(request, user_id):
-    UserProfile.objects.get(id=user_id).delete()
-    return JsonResponse({"message": "Deleted"})
+    def put(self, request, pk):
+        user = self.get_object(pk)
+        serializer = UserSerializer(user, data=request.data)
 
-@csrf_exempt
-def update_user(request, user_id):
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
 
-    if request.method == "PUT":
-        data = json.loads(request.body)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        user = UserProfile.objects.get(id=user_id)
 
-        user.name = data["name"]
-        user.email = data["email"]
-        user.save()
+    def delete(self, request, pk):
+        user = self.get_object(pk)
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
-        return JsonResponse({"message": "updated"})
