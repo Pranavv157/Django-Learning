@@ -1,11 +1,10 @@
 from django.http import JsonResponse
+from fastapi.responses import JSONResponse
 from .models import UserProfile
 from django.views.decorators.csrf import csrf_exempt
 
 import json
 
-
-# GET all users
 def get_users(request):
     users = list(UserProfile.objects.values())
     return JsonResponse(users, safe=False)
