@@ -8,7 +8,7 @@ from . import views
     path('<int:user_id>/delete/', views.delete_user),
     path('<int:user_id>/update/', views.update_user),
 ]"""
-
+"""
 from django.urls import path
 from .views import UserList, UserDetail
 
@@ -16,3 +16,13 @@ urlpatterns = [
     path('', UserList.as_view()),
     path('<int:pk>/', UserDetail.as_view()),
 ]
+"""
+
+from rest_framework.routers import DefaultRouter
+from .views import UserViewSet
+
+router = DefaultRouter()
+router.register('', UserViewSet)
+
+urlpatterns = router.urls
+
