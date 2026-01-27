@@ -3,7 +3,31 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import UserProfile
 from .serializers import UserSerializer
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from django.contrib.auth.models import User
+from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
 
+
+class RegisterView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        username = request.data.get("username")
+        password = request.data.get("password")
+
+        if User.objects.filter(username=username).exists():
+            return Response(
+                {"error": "Username already exists"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        User.objects.create_user(username=username, password=password)
+
+        return Response(
+            {"message": "User created successfully"},
+            status=status.HTTP_201_CREATED
+        )
 
 class UserViewSet(viewsets.ModelViewSet):
 
@@ -12,6 +36,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
     #  2. Serializer
     serializer_class = UserSerializer
+    
+    permission_classes = [IsAuthenticated] 
 
 
     #  3. Auto-set is_active=True when creating user
@@ -49,8 +75,11 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def restore(self, request, pk=None):
-        user = UserProfile.objects.get(pk=pk)
+        user = self.get_object()
         user.is_active = True
         user.save()
         return Response({"message": "User restored successfully"})
+    
+
+
 

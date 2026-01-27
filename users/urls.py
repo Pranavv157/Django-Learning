@@ -17,12 +17,13 @@ urlpatterns = [
     path('<int:pk>/', UserDetail.as_view()),
 ]
 """
-
 from rest_framework.routers import DefaultRouter
 from .views import UserViewSet
 
 router = DefaultRouter()
-router.register('', UserViewSet)
+router.register('', UserViewSet)   # ⭐ enable this
 
 urlpatterns = router.urls
+
+
 
