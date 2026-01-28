@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import UserProfile
 from .serializers import UserSerializer
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated,IsAdminUser
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
@@ -37,7 +37,11 @@ class UserViewSet(viewsets.ModelViewSet):
     #  2. Serializer
     serializer_class = UserSerializer
     
-    permission_classes = [IsAuthenticated] 
+    def get_permissions(self):
+        if self.action == "destroy":
+            return [IsAdminUser()]
+        return [IsAuthenticated()]
+
 
 
     #  3. Auto-set is_active=True when creating user
