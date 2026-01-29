@@ -6,7 +6,9 @@ from .serializers import UserSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated,IsAdminUser
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
+from .permissions import IsOwner
+
+
 
 
 class RegisterView(APIView):
@@ -38,24 +40,18 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     
     def get_permissions(self):
+
         if self.action == "destroy":
             return [IsAdminUser()]
+
+        if self.action in ["update", "partial_update"]:
+            return [IsOwner()]
+
         return [IsAuthenticated()]
 
 
 
     #  3. Auto-set is_active=True when creating user
-    def create(self, request):
-        data = request.data.copy()
-        data["is_active"] = True
-
-        serializer = self.serializer_class(data=data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
     #  4. Soft delete (DELETE → deactivate instead)
@@ -84,6 +80,3 @@ class UserViewSet(viewsets.ModelViewSet):
         user.save()
         return Response({"message": "User restored successfully"})
     
-
-
-
