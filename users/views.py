@@ -7,6 +7,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated,IsAdminUser
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from .permissions import IsOwner
+from .filters import UserFilter
 
 
 
@@ -40,7 +41,11 @@ class UserViewSet(viewsets.ModelViewSet):
     #  2. Serializer
     serializer_class = UserSerializer
 
-    def get_queryset(self):
+    #filtering using filtersets
+    #filterset_fields = ["is_active", "name", "email","id"]
+
+    #manual filtering
+    """def get_queryset(self):
         queryset =self.queryset # base
 
         params = self.request.query_params
@@ -61,7 +66,11 @@ class UserViewSet(viewsets.ModelViewSet):
             is_active = is_active.lower() == "true"
             queryset = queryset.filter(is_active=is_active)
 
-        return queryset
+        return queryset"""
+
+        #Advanced Filtering
+    filterset_class = UserFilter
+
 
     
     def get_permissions(self):
@@ -70,7 +79,7 @@ class UserViewSet(viewsets.ModelViewSet):
             return [IsAdminUser()]
 
         if self.action in ["update", "partial_update"]:
-            return [IsOwner()]
+            return [IsAuthenticated(),IsOwner()]
 
         return [IsAuthenticated()]
 
