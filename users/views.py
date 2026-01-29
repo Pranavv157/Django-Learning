@@ -11,6 +11,7 @@ from .permissions import IsOwner
 
 
 
+
 class RegisterView(APIView):
     permission_classes = [AllowAny]
 
@@ -34,10 +35,34 @@ class RegisterView(APIView):
 class UserViewSet(viewsets.ModelViewSet):
 
     # 1. Default queryset → only active users
-    queryset = UserProfile.objects.filter(is_active=True)
+    queryset = UserProfile.objects.all()
 
     #  2. Serializer
     serializer_class = UserSerializer
+
+    def get_queryset(self):
+        queryset =self.queryset # base
+
+        params = self.request.query_params
+        user_id=params.get("user_id")
+        name = params.get("name")
+        email = params.get("email")
+        is_active = params.get("is_active")
+        if user_id:
+            queryset=queryset.filter(id=user_id)
+
+        if name:
+            queryset = queryset.filter(name__icontains=name)
+
+        if email:
+            queryset = queryset.filter(email__icontains=email)
+
+        if is_active is not None:
+            is_active = is_active.lower() == "true"
+            queryset = queryset.filter(is_active=is_active)
+
+        return queryset
+
     
     def get_permissions(self):
 
