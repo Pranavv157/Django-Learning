@@ -137,8 +137,10 @@ REST_FRAMEWORK = {
     'PAGE_SIZE' : 5,
     'PAGE_SIZE_QUERY_PARAM': 'page_size',
     'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend'
-    ],
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.OrderingFilter',
+    ]
+
 
 }
 

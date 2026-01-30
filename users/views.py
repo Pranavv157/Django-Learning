@@ -71,6 +71,11 @@ class UserViewSet(viewsets.ModelViewSet):
         #Advanced Filtering
     filterset_class = UserFilter
 
+    #Ordering
+    #ordering_fields = ["id", "name", "email"]
+    #ordering = ["id"]   # default order
+
+
 
     
     def get_permissions(self):

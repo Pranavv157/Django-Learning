@@ -1,5 +1,6 @@
 import django_filters
 from .models import UserProfile
+from django_filters import OrderingFilter
 
 
 class UserFilter(django_filters.FilterSet):
@@ -18,6 +19,15 @@ class UserFilter(django_filters.FilterSet):
 
     # id <= value
     max_id = django_filters.NumberFilter(field_name="id", lookup_expr="lte")
+
+    order_by = OrderingFilter(
+    fields=(
+        ("id", "id"),
+        ("name", "name"),
+        ("email", "email"),
+    )
+    )
+
 
 
     class Meta:
