@@ -8,6 +8,11 @@ from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from .permissions import IsOwner
 from .filters import UserFilter
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
+
+
 
 
 
@@ -32,6 +37,7 @@ class RegisterView(APIView):
             {"message": "User created successfully"},
             status=status.HTTP_201_CREATED
         )
+
 
 class UserViewSet(viewsets.ModelViewSet):
 
@@ -74,7 +80,24 @@ class UserViewSet(viewsets.ModelViewSet):
     #Ordering
     #ordering_fields = ["id", "name", "email"]
     #ordering = ["id"]   # default order
+    #caching
+    
 
+    def list(self, request, *args, **kwargs):
+
+        cache_key = f"users_page_{request.user.id}_{request.query_params}"
+
+        cached = cache.get(cache_key)
+        if cached:
+            print("cache hit")
+            return Response(cached)
+        print("miss")
+
+        response = super().list(request, *args, **kwargs)  #imp
+
+        cache.set(cache_key, response.data, 60)
+
+        return response
 
 
     
