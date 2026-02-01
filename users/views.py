@@ -11,10 +11,7 @@ from .filters import UserFilter
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
-
-
-
-
+from .tasks import send_welcome_email
 
 
 
@@ -32,7 +29,8 @@ class RegisterView(APIView):
             )
 
         User.objects.create_user(username=username, password=password)
-
+        
+        send_welcome_email.delay(username)
         return Response(
             {"message": "User created successfully"},
             status=status.HTTP_201_CREATED
@@ -42,13 +40,21 @@ class RegisterView(APIView):
 class UserViewSet(viewsets.ModelViewSet):
 
     # 1. Default queryset → only active users
-    queryset = UserProfile.objects.all()
+    #queryset = UserProfile.objects.all()
+
+    # optimization (no N+1 queries)
+    queryset = UserProfile.objects.select_related("user")
+
 
     #  2. Serializer
     serializer_class = UserSerializer
 
     #filtering using filtersets
     #filterset_fields = ["is_active", "name", "email","id"]
+
+    #Advanced Filtering
+    filterset_class = UserFilter
+
 
     #manual filtering
     """def get_queryset(self):
@@ -74,15 +80,13 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return queryset"""
 
-        #Advanced Filtering
-    filterset_class = UserFilter
-
+    
     #Ordering
     #ordering_fields = ["id", "name", "email"]
     #ordering = ["id"]   # default order
-    #caching
     
-
+    
+   # Redis caching + pagination safe
     def list(self, request, *args, **kwargs):
 
         cache_key = f"users_page_{request.user.id}_{request.query_params}"
