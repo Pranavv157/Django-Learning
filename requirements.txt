@@ -1,0 +1,9 @@
+Django
+djangorestframework
+django-filter
+djangorestframework-simplejwt
+psycopg2-binary
+redis
+celery
+django-redis
+python-dotenv
