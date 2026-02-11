@@ -2,7 +2,7 @@
 
 Building backend skills step-by-step using Django.
 
-##  🔹 Core Backend
+# Core Backend
 
 -Django project structure
 -Apps architecture
@@ -11,7 +11,7 @@ Building backend skills step-by-step using Django.
 -Serializers (validation, transformation)
 -Django ORM (CRUD, relations)
 
-##🔹 REST API (DRF)
+# REST API (DRF)
 
 -ModelViewSet
 -APIView
@@ -19,7 +19,7 @@ Building backend skills step-by-step using Django.
 -Custom actions (@action)
 -Soft delete pattern
 
-##🔹 Authentication & Security
+# Authentication & Security
 
 -JWT authentication (SimpleJWT)
 -Login / Register APIs
@@ -28,7 +28,7 @@ Building backend skills step-by-step using Django.
 -Bearer token flow
 -Production auth lifecycle understanding
 
-##🔹 Permissions (Access Control)
+# Permissions (Access Control)
 
 -IsAuthenticated
 -IsAdminUser
@@ -37,7 +37,7 @@ Building backend skills step-by-step using Django.
 -Action-based permissions (get_permissions)
 -Role-based security design
 
-##🔹 Database & ORM Advanced
+# Database & ORM Advanced
 
 -Query optimization
 -select_related
@@ -46,7 +46,7 @@ Building backend skills step-by-step using Django.
 -Performance mindset
 -ORM vs raw SQL understanding
 
-##🔹 Filtering / Search / Ordering
+# Filtering / Search / Ordering
 
 -Manual filtering
 -django-filter (FilterSet)
@@ -54,13 +54,13 @@ Building backend skills step-by-step using Django.
 -OrderingFilter
 -Query param based APIs
 
-##🔹 Pagination
+# Pagination
 
 -PageNumberPagination
 -LimitOffsetPagination
 -CursorPagination
 
-##🔹 Caching (Performance)
+# Caching (Performance)
 
 -Django cache framework
 -Redis cache backend
@@ -70,14 +70,14 @@ Building backend skills step-by-step using Django.
 -Per-user cache keys
 -API speed optimization
 
-##🔹 Background Tasks (Async)
+# Background Tasks (Async)
 
 -Celery setup
 -Redis broker
 -Task queues
 -Non-blocking operations (emails, heavy work)
 
-##🔹 DevOps / Production Setup
+# DevOps / Production Setup
 
 -Docker
 -Dockerfile
@@ -89,7 +89,7 @@ Building backend skills step-by-step using Django.
 -Environment variables
 -Full local production-like stack
 
-##🔹 Logging & Debugging
+# Logging & Debugging
 
 -Django logging config
 -INFO / WARNING / ERROR logs
@@ -97,7 +97,7 @@ Building backend skills step-by-step using Django.
 -Debugging requests
 -Monitoring mindset
 
-##🔹 Real-world patterns implemented
+# Real-world patterns implemented
 
 -Soft delete
 -Ownership control
