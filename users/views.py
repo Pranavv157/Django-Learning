@@ -50,7 +50,8 @@ class RegisterView(APIView):
         send_welcome_email.delay(user.id)
 
         return Response(
-            {"message": "User created successfully"},
+                {"message": "User created successfully"},
+
             status=status.HTTP_201_CREATED
         )
 

@@ -1,7 +1,9 @@
 from celery import shared_task
-import time
+import logging
+
+logger = logging.getLogger(__name__)
 
 @shared_task
-def send_welcome_email(username):
-    time.sleep(5)  # simulate heavy work
-    print(f"Email sent to {username}")
+def send_welcome_email(user_id):
+    print(f"Welcome email sent to user {user_id}")
+    logger.info(f"Welcome email sent to user {user_id}")

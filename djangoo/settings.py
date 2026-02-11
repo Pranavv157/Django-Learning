@@ -163,27 +163,29 @@ CACHES = {
 CELERY_BROKER_URL = os.getenv("REDIS_URL")
 
 import os
-
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
 
     "formatters": {
-        "standard": {
-            "format": "[{levelname}] {asctime} {name} → {message}",
-            "style": "{",
+        "colored": {
+            "()": "colorlog.ColoredFormatter",
+            "format": "%(log_color)s[%(levelname)s] %(asctime)s %(name)s → %(message)s",
+        },
+        "simple": {
+            "format": "[%(levelname)s] %(asctime)s %(name)s → %(message)s",
         },
     },
 
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
-            "formatter": "standard",
+            "formatter": "colored",   #  colored here
         },
         "file": {
             "class": "logging.FileHandler",
-            "filename": os.path.join(BASE_DIR, "app.log"),
-            "formatter": "standard",
+            "filename": "app.log",
+            "formatter": "simple",    # file stays plain
         },
     },
 
