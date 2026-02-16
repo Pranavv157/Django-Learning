@@ -136,17 +136,30 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 REST_FRAMEWORK = {
+    #auth
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         
     ),
+    #pagination
     'DEFAULT_PAGINATION_CLASS' : 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE' : 5,
     'PAGE_SIZE_QUERY_PARAM': 'page_size',
+    #filtering
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.OrderingFilter',
-    ]
+    ],
+    #throttling
+    #"DEFAULT_THROTTLE_CLASSES": [
+     #   "rest_framework.throttling.UserRateThrottle",
+      #  "rest_framework.throttling.AnonRateThrottle",
+    #],
+
+    'DEFAULT_THROTTLE_RATES': {
+        'login':'3/min',
+        'register':'3/min',
+    },
 
 
 }

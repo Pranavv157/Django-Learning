@@ -14,6 +14,11 @@ from .permissions import IsOwner
 from .filters import UserFilter
 from .tasks import send_welcome_email
 
+from .throttle import LoginThrottle, RegisterThrottle
+from rest_framework.throttling import SimpleRateThrottle
+
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 # logging
 import logging
 logger = logging.getLogger(__name__)
@@ -21,6 +26,8 @@ logger = logging.getLogger(__name__)
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
+    throttle_classes=[RegisterThrottle]
+
 
     def post(self, request):
         username = request.data.get("username")
@@ -54,6 +61,11 @@ class RegisterView(APIView):
 
             status=status.HTTP_201_CREATED
         )
+class ThrottledTokenObtainPairView(TokenObtainPairView):
+    permission_classes = [AllowAny]
+    throttle_classes = [LoginThrottle]
+
+
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -129,6 +141,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
 
         if self.action == "destroy":
+            logger.warning("Admin permission required")
             return [IsAdminUser()]
 
         if self.action in ["update", "partial_update"]:

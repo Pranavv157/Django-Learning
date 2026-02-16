@@ -24,7 +24,7 @@ from django.urls import path, include
 
 """
 
-from users.views import RegisterView
+from users.views import RegisterView,ThrottledTokenObtainPairView
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -35,8 +35,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('register/', RegisterView.as_view()),  
-    path('login/', TokenObtainPairView.as_view()),
-
+    path("login/", ThrottledTokenObtainPairView.as_view()),  
     path('users/', include('users.urls')),
 ]
 
