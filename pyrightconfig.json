@@ -1,6 +1,9 @@
 {
-    "typeCheckingMode": "basic",
-    "reportAttributeAccessIssue": false,
-    "reportFunctionMemberAccess": false,
-    "reportArgumentType": false
-  }
+  "typeCheckingMode": "basic",
+
+  "reportFunctionMemberAccess": "none",
+  "reportAttributeAccessIssue": "none",
+  "reportArgumentType": "none",
+
+  "useLibraryCodeForTypes": true
+}

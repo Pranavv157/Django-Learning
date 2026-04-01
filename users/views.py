@@ -54,7 +54,7 @@ class RegisterView(APIView):
             raise
 
         # send async email task (use stable ID instead of username)
-        send_welcome_email.delay(user.id)
+        send_welcome_email.delay(user.id) #type:ignore 
 
         return Response(
                 {"message": "User created successfully"},
@@ -75,7 +75,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     # optimization (no N+1 queries) + ordering for pagination safety
     queryset = (
-        UserProfile.objects
+        UserProfile.objects #type:ignore
         .select_related("user")
         .order_by("id")
     )
@@ -166,7 +166,7 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def active(self, request):
         users = (
-            UserProfile.objects
+            UserProfile.objects #type:ignore
             .select_related("user")
             .filter(is_active=True)
             .order_by("id")
